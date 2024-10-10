@@ -61,7 +61,7 @@ func (s *scraper) Run() {
 
 	var wg sync.WaitGroup
 	for _, roomId := range s.input.RoomIds {
-		r, err := s.scrapeReviews(roomId)
+		r, err := s.scrapeReviews(roomId, 0)
 		if err != nil {
 			fmt.Printf("%s: failed to get total reviews: %v\n", roomId, err)
 			continue
@@ -93,7 +93,7 @@ func (s *scraper) startScrape(roomId string, totalReviews int) {
 			}
 			fmt.Printf("%s: scrapping offset: %d\n", roomId, i.(int))
 
-			resp, err := s.scrapeReviews(i.(string))
+			resp, err := s.scrapeReviews(roomId, i.(int))
 			if err != nil {
 				fmt.Printf("%s: Failed to scrape agents: %v\n", roomId, err)
 				continue
@@ -110,7 +110,7 @@ func (s *scraper) startScrape(roomId string, totalReviews int) {
 				fmt.Printf("%s: Failed to send output: %v\n", roomId, err)
 				continue
 			}
-			fmt.Println("%s: succesfully sent output!", roomId)
+			fmt.Printf("%s: succesfully sent output!", roomId)
 
 			time.Sleep(500 * time.Millisecond)
 		}
@@ -128,7 +128,7 @@ func (s *scraper) startScrape(roomId string, totalReviews int) {
 
 }
 
-func (s *scraper) scrapeReviews(roomId string) (*response, error) {
+func (s *scraper) scrapeReviews(roomId string, offset int) (*response, error) {
 	u, err := url.Parse(`https://www.airbnb.com/api/v3/StaysPdpReviewsQuery/dec1c8061483e78373602047450322fd474e79ba9afa8d3dbbc27f504030f91d?operationName=StaysPdpReviewsQuery&locale=en&currency=USD&variables={"id":"U3RheUxpc3Rpbmc6MTQxMjY2NTc=","pdpReviewsRequest":{"fieldSelector":"for_p3_translation_only","forPreview":false,"limit":24,"offset":"0","showingTranslationButton":false,"first":24,"sortingPreference":"MOST_RECENT","checkinDate":"2024-12-06","checkoutDate":"2024-12-08","numberOfAdults":"1","numberOfChildren":"0","numberOfInfants":"0","numberOfPets":"0"}}&extensions={"persistedQuery":{"version":1,"sha256Hash":"dec1c8061483e78373602047450322fd474e79ba9afa8d3dbbc27f504030f91d"}}`)
 	if err != nil {
 		return nil, err
@@ -138,7 +138,7 @@ func (s *scraper) scrapeReviews(roomId string) (*response, error) {
 
 	query := u.Query()
 	query.Set("variables", fmt.Sprintf(`{"id":"%s","pdpReviewsRequest":{"fieldSelector":"for_p3_translation_only","forPreview":false,"limit":%d,"offset":"%v","showingTranslationButton":false,"first":20,"sortingPreference":"MOST_RECENT","checkinDate":"2024-12-06","checkoutDate":"2024-12-08","numberOfAdults":"1","numberOfChildren":"0","numberOfInfants":"0","numberOfPets":"0"}}`,
-		id, s.input.Limit, s.input.Offset))
+		id, s.input.Limit, offset))
 	u.RawQuery = query.Encode()
 
 	req, err := http.NewRequest("GET", u.String(), nil)
