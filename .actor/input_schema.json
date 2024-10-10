@@ -1,0 +1,38 @@
+{
+    "title": "Airbnb Review Scraper Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "roomIds": {
+            "title": "RoomIds",
+            "type": "array",
+            "description": "room ids to parse reviews from",
+            "prefill": ["123456789"],
+            "editor": "stringList"
+        },
+        "offset": {
+            "title": "offset",
+            "description": "Start from specific offset",
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "limit": {
+            "title": "limit",
+            "description": "Limit number of results",
+            "type": "integer",
+            "minimum": 5,
+            "default": 20
+        },
+        "proxyConfiguration":{
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Select proxies for scraper.",
+            "prefill": { "useApifyProxy": true },
+            "editor": "proxy"
+        }
+    },
+    "required": [
+        "roomIds"
+    ]
+}
