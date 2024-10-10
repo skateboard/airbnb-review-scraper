@@ -75,6 +75,7 @@ func (s *scraper) Run() {
 			s.startScrape(roomId, totalReviews)
 		}()
 	}
+	wg.Wait()
 	fmt.Println("succesfully scraped all reviews")
 }
 
