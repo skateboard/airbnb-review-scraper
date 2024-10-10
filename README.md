@@ -1,11 +1,6 @@
-
 ![enter image description here](https://images.apifyusercontent.com/QViNqJNkN3VG-xLmiVurqVkRPfdMLIvQT7xY2sYmVAE/aHR0cHM6Ly9kb3dubG9hZC5sb2dvLndpbmUvbG9nby9BaXJibmIvQWlyYm5iLUxvZ28ud2luZS5wbmc.png)
 
-  
-
-# Airbnb Review Scraper
-
-  
+# Airbnb Review Scrapera
 
 ## About This Actor
 
@@ -14,28 +9,56 @@ This Actor is a powerful, user-fiendly tool made to scrape reviews from specifie
 Made with Golang 1.22.1
 
 ## Tutorial
+
 Basic Usage
+
 ```json
+
+
+
 {
+
+
+
 "roomIds": ["12345689"],
+
+
+
 "offset": 0,
+
+
+
 "limit": 20
+
+
+
 }
+
+
+
 ```
 
 | parameter | type | argument | description |
 
-|--|--|--|--|
+| --------- | ----- | ------------------------- | ---------------------------- |
 
-| roomIds| array | _[roomId1, roomId2, ...]_ | An array of room ids
-| offset| int | _default=0_ | Start from a specific offset
-| limit| int | _default=20_ | Limit number of results
-  
+| roomIds | array | _[roomId1, roomId2, ...]_ | An array of room ids |
+
+| offset | int | _default=0_ | Start from a specific offset |
+
+| limit | int | _default=20_ | Limit number of results |
 
 ### Output Sample
 
-  
-
 ```json
+
 []
+
 ```
+
+## Benchmarks
+
+| total reviews | cost   | duration | proxy type  |
+| ------------- | ------ | -------- | ----------- |
+| 624           | $0.009 | 51s      | Webshare.io |
+| 614           | $0.009 | 50s      | Webshare.io |
