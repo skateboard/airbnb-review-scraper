@@ -129,6 +129,16 @@ func (s *scraper) startScrape(roomId string, totalReviews int) {
 }
 
 func (s *scraper) scrapeReviews(roomId string, offset int) (*response, error) {
+	client := s.client
+	if s.actor.ProxyConfiguration != nil {
+		proxy, err := s.actor.ProxyConfiguration.Proxy()
+		if err != nil {
+			return nil, err
+		}
+
+		client.SetProxy(proxy.String())
+	}
+
 	u, err := url.Parse(`https://www.airbnb.com/api/v3/StaysPdpReviewsQuery/dec1c8061483e78373602047450322fd474e79ba9afa8d3dbbc27f504030f91d?operationName=StaysPdpReviewsQuery&locale=en&currency=USD&variables={"id":"U3RheUxpc3Rpbmc6MTQxMjY2NTc=","pdpReviewsRequest":{"fieldSelector":"for_p3_translation_only","forPreview":false,"limit":24,"offset":"0","showingTranslationButton":false,"first":24,"sortingPreference":"MOST_RECENT","checkinDate":"2024-12-06","checkoutDate":"2024-12-08","numberOfAdults":"1","numberOfChildren":"0","numberOfInfants":"0","numberOfPets":"0"}}&extensions={"persistedQuery":{"version":1,"sha256Hash":"dec1c8061483e78373602047450322fd474e79ba9afa8d3dbbc27f504030f91d"}}`)
 	if err != nil {
 		return nil, err
@@ -174,7 +184,7 @@ func (s *scraper) scrapeReviews(roomId string, offset int) (*response, error) {
 	req.Header.Add("Accept-Encoding", "gzip, deflate, br")
 	req.Header.Add("Priority", "u=1, i")
 
-	res, err := s.client.Do(req)
+	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
